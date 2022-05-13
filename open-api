@@ -1,0 +1,781 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Supplier-Connector
+  description: >-
+    This is an open API specification for suppliers to connect with ratehub.This
+    spec is based on OTA 2003 spec and should be applicable to all the suppliers
+    or supply partners that support ARI push.<br>Reference :
+    <a>https://modelviewers.pilotfishtechnology.com/modelviewers/OTA/</a>
+  license:
+    name: Rategain Travel Technologies Ltd.
+  contact:
+    email: shailesh.modi@rategain.com
+servers:
+  - url: 'localhost:8080'
+paths:
+  /ari/inv_count:
+    put:
+      tags:
+        - Push updates
+      summary: Update Hotel Inventory Count
+      operationId: updateInv
+      requestBody:
+        description: Hotel Inventory Count request
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/OTA_HotelInvCountNotifRQ'
+      responses:
+        '200':
+          description: Sucess Response for update hotel inv count
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelInvCountNotifRS'
+        '400':
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelInvCountNotifRS'
+        '401':
+          description: Not Authorized
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelInvCountNotifRS'
+        '403':
+          description: Request Method Not Supported
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelInvCountNotifRS'
+        '500':
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelInvCountNotifRS'
+        default:
+          description: Unexpected error
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelInvCountNotifRS'
+  /ari/avail:
+    put:
+      tags:
+        - Push updates
+      summary: Update Hotel Availability
+      operationId: updateAvail
+      requestBody:
+        description: Hotel Availability update Request
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/OTA_HotelAvailNotifRQ'
+      responses:
+        '200':
+          description: Sucess Response for hotel Availability update
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelAvailNotifRS'
+        '400':
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelAvailNotifRS'
+        '401':
+          description: Not Authorized
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelAvailNotifRS'
+        '403':
+          description: Request Method Not Supported
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelAvailNotifRS'
+        '500':
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelAvailNotifRS'
+        default:
+          description: Unexpected error
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelAvailNotifRS'
+  /ari/rate:
+    put:
+      tags:
+        - Push updates
+      summary: Update Hotel rates
+      operationId: updateRate
+      requestBody:
+        description: Hotel Rate update Request
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/OTA_HotelRateAmountNotifRQ'
+      responses:
+        '200':
+          description: Sucess Response for hotel Rate update
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelRateAmountNotifRS'
+        '400':
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelRateAmountNotifRS'
+        '401':
+          description: Not Authorized
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelRateAmountNotifRS'
+        '403':
+          description: Request Method Not Supported
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelRateAmountNotifRS'
+        '500':
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelRateAmountNotifRS'
+        default:
+          description: Unexpected error
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OTA_HotelRateAmountNotifRS'
+components:
+  schemas:
+    OTA_HotelInvCountNotifRQ:
+      type: object
+      xml:
+        namespace: 'http://www.opentravel.org/OTA/2003/05'
+      properties:
+        EchoToken:
+          type: integer
+          example: 12345678
+          xml:
+            attribute: true
+        TimeStamp:
+          type: string
+          format: date-time
+          xml:
+            attribute: true
+        Version:
+          type: string
+          example: '1.0'
+          xml:
+            attribute: true
+        pos:
+            type: object
+            properties:
+              Source:
+                type: object
+                properties:
+                  RequestorID:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        xml:
+                          attribute: true
+        Inventories:
+          type: array
+          description: >- 
+            Defines available room counts for different time ranges for a single property.
+          properties:
+            HotelCode:
+              type: string
+              example: Property_1
+              xml:
+                attribute: true
+          items:   
+            properties:
+              Inventory:
+                type: object
+                properties:
+                  StatusApplicationControl:
+                    type: object
+                    properties:
+                      Start:
+                        type: string
+                        format: date
+                        xml:
+                          attribute: true
+                      end:
+                        type: string
+                        format: date
+                        xml:
+                          attribute: true
+                      InvTypeCode:
+                        type: string
+                        example: RoomID_1
+                        xml:
+                          attribute: true
+                      InvTypeName:
+                        type: string
+                        example: RoomName
+                        xml:
+                          attribute: true
+                  InvCounts:
+                    type: object
+                    properties:
+                      InvCount:
+                        type: object
+                        properties:
+                          count:
+                            type: integer
+                            example: 5
+                            xml:
+                              attribute: true
+                          counttype:
+                            type: integer
+                            description: "The type of inventory count being specified. Value Supported:  2: Definite availability."
+                            enum: [2]
+                            xml:
+                              attribute: true
+    OTA_HotelAvailNotifRQ:
+      type: object
+      xml:
+        namespace: 'http://www.opentravel.org/OTA/2003/05'
+      properties:
+        EchoToken:
+          type: integer
+          example: 12345678
+          xml:
+            attribute: true
+        TimeStamp:
+          type: string
+          format: date-time
+          xml:
+            attribute: true
+        Version:
+          type: string
+          example: '1.0'
+          xml:
+            attribute: true
+        pos:
+            type: object
+            properties:
+              Source:
+                type: object
+                properties:
+                  RequestorID:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        xml:
+                          attribute: true
+        AvailStatusMessages:
+          type: object
+          properties:
+            HotelCode:
+              type: string
+              example: Property_1
+              xml:
+                attribute: true
+            AvailStatusMessage:
+              type: object
+              properties:
+                StatusApplicationControl:
+                  type: object
+                  properties:
+                    Start:
+                      type: string
+                      format: date
+                      xml:
+                        attribute: true
+                    end:
+                      type: string
+                      format: date
+                      xml:
+                        attribute: true
+                    InvTypeCode:
+                      type: string
+                      example: RoomID_1
+                      xml:
+                        attribute: true
+                    InvTypeName:
+                      type: string
+                      example: RoomName
+                      xml:
+                        attribute: true
+                    RatePlanCode:
+                      type: string
+                      example: PackageID_1
+                      xml:
+                        attribute: true
+                    RatePlanName:
+                      type: string
+                      example: RatePlan Name
+                      xml:
+                        attribute: true
+                LengthsOfStay:
+                  type: object
+                  properties:
+                    FixedPatternLength:
+                      type: integer
+                      example: 1
+                      xml:
+                        attribute: true
+                    LengthOfStay:
+                      type: object
+                      properties:
+                        time:
+                          type: integer
+                          example: 5
+                          xml:
+                            attribute: true
+                        TimeUnit:
+                          type: string
+                          example: day
+                          xml:
+                            attribute: true
+                        MinMaxMessageType:
+                            type: string
+                            example: SetMaxLOS
+                            xml:
+                              attribute: true
+                        LOS_Pattern:
+                          type: object
+                          properties:
+                            FullPatternLOS:
+                              type: string
+                              example: "pattern"
+                              xml:
+                                attribute: true
+                RestrictionStatus:
+                  type: object
+                  properties:
+                    Status:
+                      type: string
+                      example: "[Close|Open]"
+                      xml:
+                        attribute: true
+                    Restriction:
+                      type: string
+                      example: "[Arrival|Departure|Master]"
+                      xml:
+                        attribute: true
+                    MaxAdvancedBookingOffset:
+                      type: integer
+                      xml:
+                        attribute: true
+                    MiniAdvancedBookingOffset:
+                      type: integer
+                      xml:
+                        attribute: true
+                    
+                    
+    OTA_HotelRateAmountNotifRQ:
+      type: object
+      xml:
+        namespace: 'http://www.opentravel.org/OTA/2003/05'
+      properties:
+        EchoToken:
+          type: integer
+          example: 12345678
+          xml:
+            attribute: true
+        TimeStamp:
+          type: string
+          format: date-time
+          xml:
+            attribute: true
+        Version:
+          type: string
+          example: '1.0'
+          xml:
+            attribute: true
+        pos:
+            type: object
+            properties:
+              Source:
+                type: object
+                properties:
+                  RequestorID:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        xml:
+                          attribute: true
+        RateAmountMessages:
+          type: object
+          properties:
+            HotelCode:
+              type: string
+              example: Property_1
+              xml:
+                attribute: true
+            RateAmountMessage:
+              type: object
+              properties:
+                StatusApplicationControl:
+                  type: object
+                  properties:
+                    Start:
+                      type: string
+                      format: date
+                      xml:
+                        attribute: true
+                    end:
+                      type: string
+                      format: date
+                      xml:
+                        attribute: true
+                    InvTypeCode:
+                      type: string
+                      example: RoomID_1
+                      xml:
+                        attribute: true
+                    InvTypeName:
+                      type: string
+                      example: RoomName
+                      xml:
+                        attribute: true
+                    RatePlanCode:
+                      type: string
+                      example: RoomID_1
+                      xml:
+                        attribute: true
+                    RatePlanName:
+                      type: string
+                      example: RatePlan
+                      xml:
+                        attribute: true
+                    Rates:
+                      type: object
+                      properties:
+                        Rate:
+                          type: object
+                          properties:
+                            BaseByGuestAmts:
+                              type: object
+                              properties:
+                                BaseByGuestAmt:
+                                  type: object
+                                  properties:
+                                    AmountBeforeTax:
+                                      type: string
+                                      example: '100.0'
+                                      xml:
+                                        attribute: true
+                                    CurrencyCode:
+                                      type: string
+                                      example: USD
+                                      xml:
+                                        attribute: true
+                            CancelPolicies:
+                              type: array
+                              items:
+                                $ref: '#/components/schemas/CancelPenalty'
+                              xml:
+                                wrapped: true
+                            MealsIncluded:
+                              type: object
+                              properties:
+                                Breakfast:
+                                  type: boolean
+                                  xml:
+                                    attribute: true
+                                Dinner:
+                                  type: boolean
+                                  xml:
+                                    attribute: true
+                                Lunch:
+                                  type: boolean
+                                  xml:
+                                    attribute: true
+                                MealPlanIndicator:
+                                  type: boolean
+                                  description: >-
+                                    When true, a meal plan is included in this
+                                    rate plan. When false, a meal plan is not
+                                    included in this rate plan.
+                                  xml:
+                                    attribute: true
+                                MealPlanCodes:
+                                  type: array
+                                  description: >-
+                                    1  All inclusive 2  American/full board 4 
+                                    Buffet breakfast 6  Continental breakfast 7 
+                                    English breakfast 11  Full breakfast 12 
+                                    Half board/modified American plan 14  Room
+                                    only/European plan 15  Self catering 19 
+                                    Breakfast 21  Lunch 22  Dinner 23  Breakfast
+                                    & lunch
+                                  items:
+                                    type: integer
+                                    enum:
+                                      - 1
+                                      - 2
+                                      - 4
+                                      - 6
+                                      - 7
+                                      - 11
+                                      - 12
+                                      - 14
+                                      - 15
+                                      - 19
+                                      - 21
+                                      - 22
+                                      - 23
+    OTA_HotelAvailNotifRS:
+      type: object
+      xml:
+        namespace: 'http://www.opentravel.org/OTA/2003/05'
+      properties:
+        Timestamp:
+          type: string
+          format: date-time
+          description: 'The date-time notation as defined by RFC 3339,'
+          xml:
+            attribute: true
+        Version:
+          type: string
+          enum:
+            - '1.0'
+          xml:
+            attribute: true
+        EchoToken:
+          type: string
+          example: 5fe69c95ed70a9869d9f9af7d8400a6673bb9ce9
+          xml:
+            attribute: true
+        Success:
+          type: object
+          description: Either Success or Errors must present in each message
+        Errors:
+          type: array
+          required:
+            - Error
+          items:
+            $ref: '#/components/schemas/Error'
+          xml:
+            wrapped: true
+    OTA_HotelInvCountNotifRS:
+      type: object
+      xml:
+        namespace: 'http://www.opentravel.org/OTA/2003/05'
+      properties:
+        Timestamp:
+          type: string
+          format: date-time
+          xml:
+            attribute: true
+        Version:
+          type: string
+          enum:
+            - '1.0'
+          xml:
+            attribute: true
+        EchoToken:
+          type: string
+          example: 5fe69c95ed70a9869d9f9af7d8400a6673bb9ce9
+          xml:
+            attribute: true
+        Success:
+          type: object
+        Errors:
+          type: array
+          required:
+            - Error
+          items:
+            $ref: '#/components/schemas/Error'
+          xml:
+            wrapped: true
+    OTA_HotelRateAmountNotifRS:
+      type: object
+      required:
+        - Timestamp
+        - Version
+        - EchoToken
+      xml:
+        namespace: 'http://www.opentravel.org/OTA/2003/05'
+      properties:
+        Timestamp:
+          type: string
+          format: date-time
+          xml:
+            attribute: true
+        Version:
+          type: string
+          enum:
+            - '1.0'
+          xml:
+            attribute: true
+        EchoToken:
+          type: string
+          example: 5fe69c95ed70a9869d9f9af7d8400a6673bb9ce9
+          xml:
+            attribute: true
+        Success:
+          type: object
+        Errors:
+          type: array
+          required:
+            - Error
+          items:
+            $ref: '#/components/schemas/Error'
+          xml:
+            wrapped: true
+    Error:
+      type: object
+      required:
+        - Type
+        - Code
+        - Status
+      properties:
+        Type:
+          type: integer
+          format: int32
+          enum:
+            - 12
+          description: Will be 12 which represents Processing exception as EWT in OTA spec
+          xml:
+            attribute: true
+        Code:
+          type: integer
+          format: int32
+          enum:
+            - 450
+          description: Will be 450 which represents Unable to process as ERR in OTA spec
+          xml:
+            attribute: true
+        Status:
+          type: string
+          enum:
+            - Not processed
+          xml:
+            attribute: true
+        ShortText:
+          type: string
+          xml:
+            attribute: true
+      xml:
+        name: Error
+    CancelPenalty:
+      type: object
+      xml:
+        name: CancelPenalty
+      properties:
+        AmountPercent:
+          type: object
+          properties:
+            NmbrOfNights:
+              type: integer
+              description: >-
+                Specifies the penalty in terms on the number of nights – e.g.
+                the penalty may be the value of 1 night of the stay (normally
+                the first night). This can be used in conjunction with
+                Percentage – e.g. the penalty could be 75% of the value of 1
+                night.
+              xml:
+                attribute: true
+            Amount:
+              type: number
+              format: double
+              description: >-
+                This specifies the penalty as a fixed monetary amount.  The
+                currency will be the same as the currency of the rate.
+              xml:
+                attribute: true
+            Percent:
+              type: number
+              format: float
+              description: >-
+                This is used when penalty is specified as a percentage of the
+                full stay amount or a percentage of the value for one or more
+                nights.
+              xml:
+                attribute: true
+            BasisType:
+              type: string
+              enum:
+                - FullStay
+                - Nights
+                - FirstLast
+              description: >-
+                This can have 3 values: ‘FullStay’ – this is normally specified
+                along with the Pecentage – e.g. 100% of the full stay amount; or
+                75% of the full stay amount.   If the Percentage is omitted,
+                then assume 100%. ‘Nights’ – this is used with the NmbrOfNights
+                and optionally the Pecentage.   E.g. 1 night penalty (without a
+                percentage); or 50% of 2 nights (with a percentage). ‘FirstLast’
+                - this is normally specified along with the Pecentage – e.g. 50%
+                of the value of the first and last night.   If the Percentage is
+                omitted then assume 100%. 
+              xml:
+                attribute: true
+        Deadline:
+          type: object
+          properties:
+            AbsoluteDeadline:
+              type: string
+              xml:
+                attribute: true
+            OffsetDropTime:
+              type: string
+              xml:
+                attribute: true
+              enum:
+                - Before
+                - After
+              description: >-
+                This specifies whether the offset applies to the booking date
+                (value ‘After’ – i.e. after booking) – or the arrival date
+                (value ‘Before’ – i.e. before arrival).
+            OffsetTimeUnit:
+              type: string
+              xml:
+                attribute: true
+              enum:
+                - Day
+                - Hour
+                - Week
+                - Month
+            OffsetUnitMultiplier:
+              type: integer
+              xml:
+                attribute: true
+              description: >-
+                Specifies the number of units for the offset.   E.g. if
+                OffsetUnitMultiplier is ‘36’ then that may be 36 hours or 36
+                days depending on the value of OffsetTimeUnit.
+        Description:
+          type: string
+    namespace:
+      type: string
+      enum:
+        - 'http://www.opentravel.org/OTA/2003/05'
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+security:
+  - BasicAuth: []
